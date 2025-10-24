@@ -29,7 +29,17 @@ def menu(cliente):
                 print("Saldo insuficiente para saque.")
             else:
                 print(f"Saque de R$ {valor:.2f} realizado com sucesso!")
+
         elif opcao == "4":
+            nome = input("Digite seu nome: ")
+            cpf = input("Digite seu CPF: ")
+            data_nascimento = input("Digite sua data de nascimento: ")
+            endereco = input("Digite seu endereco: ")
+            saldo = float(input("Digite o saldo inicial: R$ "))
+            conta = Conta_Poupanca(nome, cpf, data_nascimento, endereco, saldo)
+            print("Sua conta Poupança foi criada com sucesso!")
+
+        elif opcao == "7":
             print("Saindo...")
             break
         else:
