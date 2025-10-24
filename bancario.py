@@ -60,3 +60,14 @@ class banco:
     def remover_conta(self,conta):
         self.contas.remove(conta)
         
+    def listar_contas(self):
+         return self.contas
+    
+    def buscar_conta(self,cpf):
+        for conta in self.contas:
+            if conta.cpf==cpf:
+                return conta
+        return "Conta nao encontrada"
+    
+
+        
