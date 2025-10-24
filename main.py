@@ -3,12 +3,16 @@ from banco import Banco
 
 def menu(cliente):
     while True:
+        print('''👩‍💻🏛️💸💵💵--- BANCO INTER ---👩‍💻🏛️💸💵💵''')
         print("""
         ======= MENU =======
-        1. Ver saldo
-        2. Depositar
-        3. Sacar
-        4. Sair
+        1 - Ver saldo
+        2 - Depositar
+        3 - Sacar
+        4 - Criar Conta Poupanca
+        5 - Criar Conta Corrente
+        6 - Listar Contas
+        7. Sair
         ====================
         """)
         opcao = input("Escolha uma opcao: ")
@@ -29,7 +33,7 @@ def menu(cliente):
             print("Saindo...")
             break
         else:
-            print("Opcao invalida. Tente novamente.")
+            print("Opcao invalida! gostaria de tentar novamente?")
 
 if __name__ == "__main__":
     cliente1 = Conta_Corrente("Joao Silva", "123.456.789-00", "01/01/1990", "Rua A, 123", 1000.0, 500.0)
