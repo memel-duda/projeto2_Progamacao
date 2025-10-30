@@ -13,7 +13,7 @@ def menu(cliente):
         5 - Criar Conta Poupanca
         6 - Criar Conta Corrente
         7 - Listar Contas
-        8 - Sair
+        8 - Sair 
         ====================
         """)
         opcao = input("Escolha uma opcao: ")
