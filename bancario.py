@@ -69,14 +69,25 @@ class Cliente:
                 json.dump(clientes_atualizados,arquivo,indent=4)
                 return f"Cliente com CPF {cpf} excluido com sucesso!"
             
+<<<<<<< HEAD
     def cadastrar_cliente(self):
         return self.salvar_cliente()
         print(f"Cliente {self.nome} (CPF: {self.cpf}) cadastrado com sucesso.")
     
 
+=======
+            if len(clientes)==len(novo_cliente):
+                print(" Nenhum cliente encontrado com esse CPF.")
+                return 
+            
+            with open(cls.__arquivo,"w",encoding="utf-8") as arquivo: 
+                json.dump(novo_cliente)
+                print(f"Cliente com cpf {cpf} removido com sucesso!!!")
+>>>>>>> 1fed6a300a78e21e50ad247b1ff33153d4cc4aaa
 
 class Conta:
     def __init__(self,cliente,saldo,senha):
+        self.cliente=cliente
         self.saldo=saldo
         self.__senha=senha
 
@@ -100,7 +111,7 @@ class Conta:
 
 class Conta_Poupanca(Conta):
     def __init__(self, nome, cpf, data_nascimento, endereco,saldo,rendimento):
-        super().__init__(nome, cpf, data_nascimento, endereco,saldo)
+        super().__init__(Cliente(nome, cpf, data_nascimento, endereco),saldo,senha=None)
         self.rendimento=rendimento
 
     def aplicar_rendimento(self):
@@ -109,7 +120,7 @@ class Conta_Poupanca(Conta):
     
 class Conta_Corrente(Conta):
     def __init__(self, nome, cpf, data_nascimento, endereco,saldo,limite):
-        super().__init__(nome, cpf, data_nascimento, endereco,saldo)
+        super().__init__(Cliente(nome, cpf, data_nascimento, endereco),saldo,senha=None)
         self.limite=limite
 
     def sacar(self,valor):
@@ -118,7 +129,6 @@ class Conta_Corrente(Conta):
         else:
             self.saldo-=valor
             return self.saldo
-
 
     
 
