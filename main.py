@@ -26,7 +26,7 @@ def main():
             data_nascimento = input("Informe sua data de nascimento: ")
             endereco = input("Informe seu endereco: ")
             cliente = Cliente(nome, cpf, data_nascimento, endereco)
-            cliente.cadastrar_cliente()
+            print(cliente.salvar_cliente())
            
 
         elif opcao == "2":
@@ -35,42 +35,47 @@ def main():
                 print("Nenhum cliente cadastrado.")
             else:
                 for c in clientes:
-                    print(f"Nome: {c.nome}, CPF: {c.cpf}, Data de Nascimento: {c.data_nascimento}, Endereco: {c.endereco}")
+                    print(f"Nome: {c['nome']}, CPF: {c['cpf']}, Data de Nascimento: {c['data_nascimento']}, Endereço: {c['endereco']}")
          
 
         elif opcao == "3":  
             cpf = input("Informe o CPF do cliente que deseja excluir: ")
-            Cliente.excluir_cliente(cpf)
+            resultado = Cliente.excluir_cliente(cpf)
+            print(resultado)
             
 
         elif opcao == "4":
             nome = input("Nome do Cliente: ")
-            cpf = input(" CPF: ")
-            data_nascimento = input("data de nascimento: ")
-            endereco = input("endereco: ")
-            saldo = float(input("saldo inicial: R$ "))
-            limite = float(input("limite da conta corrente: R$ "))
-            conta = Conta_Corrente(nome, cpf, data_nascimento, endereco, saldo, limite)
-            print(conta.abrir_conta())
+            cpf = input("CPF: ")
+            data_nascimento = input("Data de nascimento: ")
+            endereco = input("Endereco: ")
+            saldo = float(input("Saldo inicial: R$ "))
+            senha = input("Senha para conta corrente: ")
+            cliente = Cliente(nome, cpf, data_nascimento, endereco)
+            conta = Conta_Corrente(cliente, saldo, senha, limite=0)   
+            print(conta.abrir_conta())  
+            
             
 
         elif opcao == "5":
             nome = input("Nome do Cliente: ")
-            cpf = input(" CPF: ")
-            data_nascimento = input("data de nascimento: ")
-            endereco = input("endereco: ")
-            saldo = float(input("saldo inicial: R$ "))
-            rendimento = float(input("rendimento da conta poupanca (%): "))
-            conta = Conta_Poupanca(nome, cpf, data_nascimento, endereco, saldo, rendimento)
-            print(conta.abrir_conta())
+            cpf = input("CPF: ")
+            data_nascimento = input("Data de nascimento: ")
+            endereco = input("Endereco: ")
+            saldo = float(input("Saldo inicial: R$ "))
+            rendimento = float(input("Rendimento da conta poupança (%): "))
+            senha = input("Senha para conta poupança: ")
+            cliente = Cliente(nome, cpf, data_nascimento, endereco)
+            conta = Conta_Poupanca(cliente, saldo, senha, rendimento)
+            print(conta.abrir_conta()) 
             print("Conta após rendimento: ", conta.aplicar_rendimento())
             
         
         elif opcao == "6":
             if conta:
                 valor = float(input("Informe o valor a ser depositado: R$ "))
-                conta.depositar(valor)
-                print("Deposito realizado com sucesso! Novo saldo:", conta.ver_saldo())
+            
+                print("Deposito realizado com sucesso! Novo saldo:", conta.depositar(valor))
 
             else:
                 print("Nenhuma conta criada. Por favor, deseja criar uma conta? ")
@@ -99,6 +104,4 @@ def main():
             print("Opção não encontrada! gostaria de tentar novamente?")
 
 if __name__ == "__main__":
-    
     main()
-

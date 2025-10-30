@@ -1,98 +1,92 @@
 import json
 class Cliente:
-    clientes=[]
+    
     __aquivo="clientes.json"
     def __init__(self,nome,cpf,data_nascimento,endereco,):
         self.nome=nome
         self.cpf=cpf
         self.data_nascimento=data_nascimento
         self.endereco=endereco
-        
-    try:
-       with open(__aquivo,"r",encoding="utf-8") as arquivo:
-            clientes=json.load(arquivo)
+
+    @classmethod
+    def carregar_clientes(cls):    
+        try:
+            with open(cls.__aquivo,"r",encoding="utf-8") as arquivo:
+                    clientes=json.load(arquivo)
 
 
-    except FileNotFoundError:
-        with open(__aquivo,"w",encoding="utf-8") as arquivo:
-            json.dump([],arquivo)
+        except FileNotFoundError:
+            with open(cls.__aquivo,"w",encoding="utf-8") as arquivo:
+                json.dump([],arquivo)
+            return []
 
     
     def salvar_cliente(self):
 
         """Salva ou atualizar o Cliente ao json"""
-        novo_cliente={
 
-            "nome":self.nome,
-            "cpf":self.cpf,
-            "data_nascimento":self.data_nascimento,
-            "endereco":self.endereco
-        }
+        clientes = self.carregar_clientes()
+
+        # verificar de ja existe cliente com mesmo cpf
+
+        atualizado=False
+        for c in clientes: 
+            if c["cpf"]==self.cpf:
+                c["nome"]=self.nome 
+                c["data_nascimento"]=self.data_nascimento 
+                c["endereco"]=self.endereco 
+                atualizado=True
+                break
+
+        if not atualizado:
+            novo_cliente={
+
+                "nome":self.nome,
+                "cpf":self.cpf,
+                "data_nascimento":self.data_nascimento,
+                "endereco":self.endereco
+            }
+            clientes.append(novo_cliente) 
 
         with open(self.__aquivo,"r",encoding="utf-8") as arquivo:
-            clientes=json.load(arquivo)
-            clientes.append(novo_cliente)
-            
-            atualizado=False
-            for c in clientes: #percorre a cda clinte já salvo
-                if c["cpf"]==self.cpf:# se encontra clinte com o mesmo cpf
-                    c["nome"]=self.nome # atualiza o nome
-                    c["data_nascimento"]=self.data_nascimento #atualiza a data de nascimento
-                    c["endereco"]=self.endereco #atualiza o endereco
-                    atualizado=True #marca como atualizado
-
-            if not atualizado:#se não obteve cliente com o mesmo cpf
-                clientes.append(novo_cliente) #adiciona novo cliente a lista
-
-        with open(self.__aquivo,"w",encoding="utf-8") as arquivo:
             json.dump(clientes,arquivo,indent=4)
+
+        return "Cliente atualizado com sucesso!" if atualizado else f"Cliente {self.nome} cadastrado com sucesso!"
             
-            if atualizado:
-                return "Cliente atualizado com sucesso!"
-            else:
-                print(f"Cliente {self.nome} cadastrado com sucesso!")
 
         @classmethod
         def listar_clientes(cls):
-            return cls.clientes
+            clientes = cls.carregar_clientes()
+            return clientes
                 
             
             
-        @classmethod
-        def excluir_cliente(cls,cpf):
+    @classmethod
+    def excluir_cliente(cls,cpf):
+
+           
+            clientes = cls.carregar_clientes()
+            clientes_atualizados = [c for c in clientes if c["cpf"] != cpf]
+
+            if len(clientes) == len(clientes_atualizados):
+                return f"Cliente com CPF {cpf} não encontrado."
+            
+            with open(cls.__arquivo, "w", encoding="utf-8") as arquivo:
+                json.dump(clientes_atualizados, arquivo, indent=4)
+            
+            return f"Cliente com CPF {cpf} excluído com sucesso!"
              
-            with open(cls.__aquivo,"r",encoding="utf-8") as arquivo:
-                clientes=json.load(arquivo)
-                clientes_atualizados=[c for c in clientes if c["cpf"]!=cpf]
 
-            with open(cls.__aquivo,"w",encoding="utf-8") as arquivo:
-                json.dump(clientes_atualizados,arquivo,indent=4)
-                return f"Cliente com CPF {cpf} excluido com sucesso!"
-            
-<<<<<<< HEAD
-    def cadastrar_cliente(self):
-        return self.salvar_cliente()
-        print(f"Cliente {self.nome} (CPF: {self.cpf}) cadastrado com sucesso.")
-    
-
-=======
-            if len(clientes)==len(novo_cliente):
-                print(" Nenhum cliente encontrado com esse CPF.")
-                return 
-            
-            with open(cls.__arquivo,"w",encoding="utf-8") as arquivo: 
-                json.dump(novo_cliente)
-                print(f"Cliente com cpf {cpf} removido com sucesso!!!")
->>>>>>> 1fed6a300a78e21e50ad247b1ff33153d4cc4aaa
 
 class Conta:
-    def __init__(self,cliente,saldo,senha):
+    def __init__(self,cliente,saldo,senha,endereco):
         self.cliente=cliente
         self.saldo=saldo
         self.__senha=senha
+        self.endereco=endereco
 
     def abrir_conta(self):
-        return f"Conta de {self.nome} aberta com sucesso!"
+        return f"Conta de {self.cliente.nome} aberta com sucesso"
     
 
     def depositar(self,valor):
@@ -119,8 +113,9 @@ class Conta_Poupanca(Conta):
         return self.saldo
     
 class Conta_Corrente(Conta):
-    def __init__(self, nome, cpf, data_nascimento, endereco,saldo,limite):
-        super().__init__(Cliente(nome, cpf, data_nascimento, endereco),saldo,senha=None)
+    def __init__(self, cliente,saldo,senha,limite,endereco):
+        super().__init__(cliente,saldo, senha, endereco)
+                         
         self.limite=limite
 
     def sacar(self,valor):
