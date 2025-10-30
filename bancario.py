@@ -79,7 +79,6 @@ class Cliente:
                 json.dump(novo_cliente)
                 print(f"Cliente com cpf {cpf} removido com sucesso!!!")
 
-
 class Conta:
     def __init__(self,cliente,saldo,senha):
         self.cliente=cliente
