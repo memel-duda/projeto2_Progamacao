@@ -1,5 +1,6 @@
 import json
 class Cliente:
+    clientes=[]
     __aquivo="clientes.json"
     def __init__(self,nome,cpf,data_nascimento,endereco,):
         self.nome=nome
@@ -53,12 +54,9 @@ class Cliente:
 
         @classmethod
         def listar_clientes(cls):
-
-            """Lista todos os clientes salvos no json"""
-
-            with open(cls.__aquivo,"r",encoding="utf-8") as arquivo:
-                clientes=json.load(arquivo)
-                return clientes
+            return cls.clientes
+                
+            
             
         @classmethod
         def excluir_cliente(cls,cpf):
@@ -70,6 +68,11 @@ class Cliente:
             with open(cls.__aquivo,"w",encoding="utf-8") as arquivo:
                 json.dump(clientes_atualizados,arquivo,indent=4)
                 return f"Cliente com CPF {cpf} excluido com sucesso!"
+            
+    def cadastrar_cliente(self):
+        return self.salvar_cliente()
+        print(f"Cliente {self.nome} (CPF: {self.cpf}) cadastrado com sucesso.")
+    
 
 
 class Conta:

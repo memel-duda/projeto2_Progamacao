@@ -1,0 +1,14 @@
+[
+    {
+        "nome": "mario",
+        "cpf": "3294754873",
+        "data_nascimento": "04/06/4009",
+        "endereco": "rua"
+    },
+    {
+        "nome": "mario",
+        "cpf": "3097475759",
+        "data_nascimento": "04/06/4005",
+        "endereco": "rua"
+    }
+]
