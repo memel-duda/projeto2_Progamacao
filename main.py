@@ -4,7 +4,7 @@ from bancario import Cliente,Conta,Conta_Poupanca,Conta_Corrente
 def main():
     conta = None
     while True:
-        print('''👩‍💻🏛️💸💵💵--- BANCO INTER ---👩‍💻🏛️💸💵💵''')
+        print('''--- BANCO INTER ---''')
         print("""
         ======= MENU =======
         1 - Cadastrar Cliente
@@ -16,6 +16,7 @@ def main():
         7 - Sacar
         8 - Ver Saldo
         9 - Sair 
+        10 - Abrir Conta
         ====================
         """)
         opcao = input("Escolha uma opcao: ")
@@ -42,7 +43,15 @@ def main():
             cpf = input("Informe o CPF do cliente que deseja excluir: ")
             resultado = Cliente.excluir_cliente(cpf)
             print(resultado)
-            
+
+        elif opcao == "10":  
+            nome = input("Por Favor informe seu nome: ")
+            cpf = input("Informe seu CPF: ")
+            data_nascimento = input("Informe sua data de nascimento: ")
+            endereco = input("Informe seu endereco: ")
+            cliente = Cliente(nome, cpf, data_nascimento, endereco)
+            conta = Conta(cliente,0,"senha",endereco)
+            print(conta.abrir_conta())
 
         elif opcao == "4":
             nome = input("Nome do Cliente: ")

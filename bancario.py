@@ -54,22 +54,31 @@ class Cliente:
         return "Cliente atualizado com sucesso!" if atualizado else f"Cliente {self.nome} cadastrado com sucesso!"
             
 
-        @classmethod
-        def listar_clientes(cls):
-            clientes = cls.carregar_clientes()
-            return clientes
+    @classmethod
+    def listar_clientes(cls):
+        clientes = cls.carregar_clientes()
+        return clientes
                 
             
             
     @classmethod
     def excluir_cliente(cls,cpf):
-
            
             clientes = cls.carregar_clientes()
+            dados=cls.carregar_clientes()
+            clientes=dados["clientes"]
+            contas=dados["contas"]
             clientes_atualizados = [c for c in clientes if c["cpf"] != cpf]
+            novos_contas = [conta for conta in contas if conta["cliente"]["cpf"] != cpf]
+
 
             if len(clientes) == len(clientes_atualizados):
                 return f"Cliente com CPF {cpf} não encontrado."
+                dados["clientes"]=clientes_atualizados
+                dados["contas"]=novos_contas
+                cls.__salvar_dados(dados)
+                
+
             
             with open(cls.__arquivo, "w", encoding="utf-8") as arquivo:
                 json.dump(clientes_atualizados, arquivo, indent=4)
@@ -85,23 +94,39 @@ class Conta:
         self.__senha=senha
         self.endereco=endereco
 
-    def abrir_conta(self):
-        return f"Conta de {self.cliente.nome} aberta com sucesso"
+    def salvar_conta(self,dados_conta):
+        dados=Cliente.carregar_clientes()
+        dados["contas"].append(dados_conta)
+        Cliente.__salvar_dados(dados)
+
+
     
 
     def depositar(self,valor):
         self.saldo+=valor
+        self.atulizar_json()
         return self.saldo
+    
     
     def sacar(self,valor):
         if valor>self.saldo:
             return "Saldo invalido"
         else:
             self.saldo-=valor
+            self.atulizar_json()
             return self.saldo
         
     def ver_saldo(self):
         return self.saldo
+    
+    def atulizar_json(self):
+        dados=Cliente.carregar_clientes()
+        contas=dados["contas"]
+        for conta in contas:
+            if conta["cliente"]["cpf"]==self.cliente.cpf:
+                conta["saldo"]=self.saldo
+                break
+        Cliente.__salvar_dados(dados)
 
 class Conta_Poupanca(Conta):
     def __init__(self, nome, cpf, data_nascimento, endereco,saldo,rendimento):
@@ -110,11 +135,20 @@ class Conta_Poupanca(Conta):
 
     def aplicar_rendimento(self):
         self.saldo+=self.saldo*self.rendimento
+        self.atulizar_json()
         return self.saldo
     
+    def abrir_conta(self):
+        self.salvar_conta({
+            "cpf":self.cliente.cpf,
+            "nome":self.cliente.nome,
+            "saldo":self.saldo,
+            "rendimento":self.rendimento,
+        })
+        return f"Conta poupança de {self.cliente.nome} aberta com sucesso!"
 class Conta_Corrente(Conta):
-    def __init__(self, cliente,saldo,senha,limite,endereco):
-        super().__init__(cliente,saldo, senha, endereco)
+    def __init__(self, cliente,saldo,senha,limite,):
+        super().__init__(cliente,saldo, senha,)
                          
         self.limite=limite
 
@@ -123,8 +157,17 @@ class Conta_Corrente(Conta):
             return "Saldo invalido"
         else:
             self.saldo-=valor
+            self.atulizar_json()
             return self.saldo
 
+    def abrir_conta(self):
+        self.salvar_conta({
+            "cpf":self.cliente.cpf,
+            "nome":self.cliente.nome,
+            "saldo":self.saldo,
+            "limite":self.limite,
+        })
+        return f"Conta corrente de {self.cliente.nome} aberta com sucesso!"
     
 
         
